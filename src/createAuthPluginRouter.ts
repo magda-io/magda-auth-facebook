@@ -87,11 +87,6 @@ export default function createAuthPluginRouter(
             ? (req as any)?.session?.[redirectUrlId]
             : undefined;
 
-        if (redirectUrl) {
-            // delete session data
-            delete (req as any).session[redirectUrlId];
-        }
-
         // This should not happen. If it happens, do our best.
         if (!redirectUrl) {
             console.log(
