@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+{{- if not .Values.autoscaler.enabled }}
+  replicas: {{ .Values.replicas | default 1 }}
+{{- end }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ .Values.global.rollingUpdate.maxUnavailable | default 0 }}
+  selector:
+    matchLabels:
+      service: {{ .Chart.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/authPluginConfig: {{ .Values.authPluginConfig | mustToRawJson | sha256sum }}
+      labels:
+        service: {{ .Chart.Name }}
+    spec:
+      {{- include "magda.imagePullSecrets" . | indent 6 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ include "magda.image" . | quote }}
+        imagePullPolicy: {{ include "magda.imagePullPolicy" . | quote }}
+        command: [
+            "node",
+            "/usr/src/app/component/dist/index.js",
+            "--listenPort", "80",
+            "--dbHost", "session-db",
+            "--dbPort", "5432",
+            "--cookieJson", "/etc/gateway-config/cookie.json",
+            "--externalUrl", {{ .Values.global.externalUrl | quote }},
+            "--authPluginRedirectUrl", {{ .Values.authPluginRedirectUrl | default .Values.global.authPluginRedirectUrl | quote }},
+            "--authApiUrl", "http://authorization-api/v0",
+            "--authPluginConfigJson", "/etc/{{ .Chart.Name }}-config/authPluginConfig.json"
+        ]
+        volumeMounts:
+          - name: gateway-config
+            mountPath: /etc/gateway-config
+          - name: "{{ .Chart.Name }}-config"
+            mountPath: "/etc/{{ .Chart.Name }}-config"
+{{- if .Values.global.enableLivenessProbes }}
+        livenessProbe:
+          httpGet:
+            path: "/healthz"
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 10
+{{- end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+        - name: USER_ID
+          value: {{ .Values.global.defaultAdminUserId | default .Values.defaultAdminUserId }}
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-secrets
+              key: jwt-secret
+        - name: SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-secrets
+              key: session-secret
+        {{- include "magda.db-client-credential-env" (dict "dbName" "session-db" "root" .) | indent 8 }}
+      # --- load cookie setting from gateway-config
+      volumes:
+        - name: gateway-config
+          configMap:
+            name: gateway-config
+        - name: "{{ .Chart.Name }}-config"
+          configMap:
+            name: "{{ .Chart.Name }}-config"
