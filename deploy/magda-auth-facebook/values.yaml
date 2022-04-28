@@ -18,10 +18,10 @@ authPluginRedirectUrl:
 
 authPluginConfig:
   # -- the unique key of the auth plugin. Allowed characters: [a-zA-Z0-9\-]
-  key: "test-auth-plugin"
+  key: "facebook"
   
   # -- the display name of the auth plugin.
-  name: "Test Auth Plugin"
+  name: "Facebook"
   
   # -- the display icon URL of the auth plugin.
   iconUrl: "/icon.svg"
@@ -86,7 +86,7 @@ autoscaler:
   targetCPUUtilizationPercentage: 80
 
 image: 
-  name: "magda-auth-template"
+  name: "magda-auth-facebook"
   # repository: 
   # tag: 
   # pullPolicy: 

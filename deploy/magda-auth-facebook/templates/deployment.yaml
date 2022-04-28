@@ -33,6 +33,7 @@ spec:
             "--dbPort", "5432",
             "--cookieJson", "/etc/gateway-config/cookie.json",
             "--externalUrl", {{ .Values.global.externalUrl | quote }},
+            "--clientId", {{ .Values.clientId | quote }}
             "--authPluginRedirectUrl", {{ .Values.authPluginRedirectUrl | default .Values.global.authPluginRedirectUrl | quote }},
             "--authApiUrl", "http://authorization-api/v0",
             "--authPluginConfigJson", "/etc/{{ .Chart.Name }}-config/authPluginConfig.json"
@@ -66,6 +67,11 @@ spec:
             secretKeyRef:
               name: auth-secrets
               key: session-secret
+        - name: CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: facebook-secrets
+              key: client-secret
         {{- include "magda.db-client-credential-env" (dict "dbName" "session-db" "root" .) | indent 8 }}
       # --- load cookie setting from gateway-config
       volumes:

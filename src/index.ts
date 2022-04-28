@@ -51,6 +51,20 @@ const argv = yargs
         type: "string",
         default: "http://localhost:6104/v0"
     })
+    .option("clientId", {
+        describe: "The client ID for Facebook OAuth.",
+        type: "string",
+        default:
+            process.env.CLIENT_ID || process.env.npm_package_config_clientId
+    })
+    .option("clientSecret", {
+        describe:
+            "The secret to use for Facebook OAuth.  This can also be specified with the CLIENT_SECRET environment variable.",
+        type: "string",
+        default:
+            process.env.CLIENT_SECRET ||
+            process.env.npm_package_config_clientSecret
+    })
     .option("jwtSecret", {
         describe:
             "The secret to use to sign JSON Web Token (JWT) for authenticated requests.  This can also be specified with the JWT_SECRET environment variable.",
@@ -81,7 +95,7 @@ const argv = yargs
         default: process.env.USER_ID || process.env.npm_package_config_userId
     }).argv;
 
-const authPluginConfig = (argv.authPluginConfigJson as any) as AuthPluginConfig;
+const authPluginConfig = argv.authPluginConfigJson as any as AuthPluginConfig;
 
 // Create a new Express application.
 const app = express();
@@ -95,7 +109,7 @@ app.get("/healthz", (req, res) => res.send("OK"));
  * a 36x36 size icon to be shown on frontend login page
  */
 app.get("/icon.svg", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "../assets/generic-logo.svg"))
+    res.sendFile(path.resolve(__dirname, "../assets/fb-logo.svg"))
 );
 
 /**
@@ -145,9 +159,8 @@ app.use(
     createAuthPluginRouter({
         passport: passport,
         authorizationApi: authApiClient,
-        // you might want to update the helm chart to pass clientId & clientSecret provided by your idp (identity provied)
-        clientId: "My clientId",
-        clientSecret: "My clientSecret",
+        clientId: argv.clientId,
+        clientSecret: argv.clientSecret,
         externalUrl: argv.externalUrl,
         authPluginRedirectUrl: argv.authPluginRedirectUrl,
         authPluginConfig
