@@ -5,6 +5,10 @@ global:
   externalUrl: ""
   authPluginRedirectUrl: "/sign-in-redirect"
 
+# -- The client ID for Facebook OAuth.
+# client secret should be passed via secret `oauth-secrets` key `facebook-client-secret`
+clientId: ""
+
 # -- the redirection url after the whole authentication process is completed.
 # Authentication Plugins will use this value as default.
 # The following query parameters can be used to supply the authentication result:

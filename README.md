@@ -21,7 +21,7 @@ magda-auth-my-idp:
   clientId: "xxxxxxx"
 ```
 
-3. Supply facebook oauth client secret via secret "facebook-secrets" key "client-secret".
+3. Supply facebook oauth client secret via secret "oauth-secrets" key "facebook-client-secret".
 
 4. Config Gatway to add the auth plugin to Gateway's plugin list (More details see [here](https://github.com/magda-io/magda/blob/master/deploy/helm/internal-charts/gateway/README.md))
 ```yaml
@@ -60,6 +60,7 @@ Kubernetes: `>= 1.14.0-0`
 | autoscaler.maxReplicas | int | `3` |  |
 | autoscaler.minReplicas | int | `1` |  |
 | autoscaler.targetCPUUtilizationPercentage | int | `80` |  |
+| clientId | string | `""` | The client ID for Facebook OAuth. client secret should be passed via secret `oauth-secrets` key `facebook-client-secret` |
 | defaultAdminUserId | string | `"00000000-0000-4000-8000-000000000000"` | which system account we used to talk to auth api The value of this field will only be used when `global.defaultAdminUserId` has no value |
 | defaultImage.imagePullSecret | bool | `false` |  |
 | defaultImage.pullPolicy | string | `"IfNotPresent"` |  |

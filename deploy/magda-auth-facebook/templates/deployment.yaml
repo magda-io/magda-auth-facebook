@@ -33,7 +33,7 @@ spec:
             "--dbPort", "5432",
             "--cookieJson", "/etc/gateway-config/cookie.json",
             "--externalUrl", {{ .Values.global.externalUrl | quote }},
-            "--clientId", {{ .Values.clientId | quote }}
+            "--clientId", {{ .Values.clientId | quote }},
             "--authPluginRedirectUrl", {{ .Values.authPluginRedirectUrl | default .Values.global.authPluginRedirectUrl | quote }},
             "--authApiUrl", "http://authorization-api/v0",
             "--authPluginConfigJson", "/etc/{{ .Chart.Name }}-config/authPluginConfig.json"
