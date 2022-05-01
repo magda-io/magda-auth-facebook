@@ -49,7 +49,7 @@ export default function createAuthPluginRouter(
             {
                 clientID: clientId,
                 clientSecret: clientSecret,
-                profileFields: ["displayName", "picture", "email"],
+                profileFields: ["displayName", "photos", "email"],
                 callbackURL: `${loginBaseUrl}/${authPluginConfig.key}/return`
             },
             function (
@@ -77,8 +77,12 @@ export default function createAuthPluginRouter(
             typeof req?.query?.redirect === "string" && req.query.redirect
                 ? getAbsoluteUrl(req.query.redirect, externalUrl)
                 : resultRedirectionUrl;
+        // save final hop redirect url to session
         (req as any).session[redirectUrlId] = redirectUrl;
-        passport.authenticate("facebook")(req, res, next);
+        passport.authenticate("facebook", {
+            scope: ["public_profile", "email"],
+            state: redirectUrlId
+        })(req, res, next);
     });
 
     function getLoginReturnRedirectUrl(req: express.Request) {
