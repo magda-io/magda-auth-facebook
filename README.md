@@ -27,7 +27,7 @@ https://developers.facebook.com/
 
 3. Config the auth plugin with required parameters
 ```yaml
-magda-auth-my-facebook:
+magda-auth-facebook:
   clientId: "xxxxxxx"
 ```
 
