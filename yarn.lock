@@ -134,9 +134,9 @@
   integrity sha512-Z61JK7DKDtdKTWwLeElSEBcWGRLY8g95ic5FoQqI9CMx0ns/Ghep3B4DfcEimiKMvtamNVULVNKEsiwV3aQmXw==
 
 "@types/node@*":
-  version "16.7.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.7.12.tgz#4e30f80bfa9983fbc3b55875c0522da0303f4e95"
-  integrity sha512-IrhrusVM9QJAn1xLFFqbZH+XCI8L6eZoVHjR4sZeGTBBvjQSuchXGgKpown1jP75TCMSndcbudYBDTekOhcIZA==
+  version "18.11.18"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.18.tgz#8dfb97f0da23c2293e554c5a50d61ef134d7697f"
+  integrity sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==
 
 "@types/passport-facebook@^2.1.11":
   version "2.1.11"
